@@ -1,0 +1,7 @@
+# bashrc work specific
+
+. ~/.bash-aliases-work
+
+export PATH=~/bin/work:$PATH
+
+
