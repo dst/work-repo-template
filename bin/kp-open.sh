@@ -6,12 +6,12 @@
 # 11.09.2014
 
 . ~/.bash-functions
-. ~/.bash-paths
+. ~/.bash-paths-work
 
 function createFiles {
     for project in work
     do
-        file=$ym.$project.kp
+        file=$ym-$project.kp
 
         if [ ! -f $file ]
         then
@@ -26,11 +26,10 @@ function createFile {
 
     touch $file
 
-    echo "#("$ym")" >> $file
+    echo "# kp ${$ym}" >> $file
     echo >> $file
-    echo "#################################################################" >> $file
-    echo "# ??.?? - ??.??" >> $file
-    echo "`date +"%d.%m.%Y"` -- ??h --dst" >> $file
+    today=`date +"%d.%m.%Y"`
+    echo "$today ??.??-??.??" >> $file
 
     git add $file
 }
