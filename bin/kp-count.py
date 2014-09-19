@@ -5,40 +5,73 @@ Counts hours in specified kp file
 Darek Stefanski
 """
 
+import datetime
 import os
 import sys
 
-def get_hours(kp_file):
-    f = os.popen('cat %s | grep "dst" | cut -d\"-\" -f3' % kp_file)
-    hours = f.readlines()
-    hours = map(lambda line: str2float(line.replace("h", "")), hours)
-    return hours
+WORK_DAY_IN_SECS = 8 * 60 * 60
 
-def str2float(str):
+def usage():
+   print "Usage: %s file" % sys.argv[0]
+
+def get_kp_file():
+    if len(sys.argv) != 2:
+        usage()
+        sys.exit(1)
+    return sys.argv[1]
+
+def get_durations(kp_file):
+    durations = []
+    f = open(kp_file)
+    lines = f.readlines()
+    for line in lines:
+        line = line.replace("\n", "")
+        if not line or line.startswith("#"):
+            continue
+        # dd.mm.yyyy: hh.mm - hh.mm
+        start, end = map(str2time, line.split(":")[1].split("-"))
+        dummydate = datetime.date(2000,1,1)
+        duration = datetime.datetime.combine(dummydate,  end) - datetime.datetime.combine(dummydate, start)
+        durations.append(duration)
+    return durations
+
+def str2time(str):
     try:
-        return float(str)
+        hours, minutes = str.split(".")
+        return datetime.time(int(hours), int(minutes))
     except ValueError:
-        print "Cannot parse float: %s" % str
-        return 0    
+        print "Cannot parse time%s" % str
+        return datetime.time(0, 0) 
 
-def ornament(count):
-    if count > 8:
+def ornament(duration):
+    if duration.seconds > WORK_DAY_IN_SECS:
         return "+"
-    if count < 8:
+    if duration.seconds < WORK_DAY_IN_SECS:
         return "-"
     return ""
 
-kp_file = sys.argv[1]
+def seconds2time(seconds):
+    negative = seconds < 0
+    if negative:
+        seconds = abs(seconds)
+
+    hours = seconds / (60 * 60)
+    minutes = (seconds - hours * 60 * 60) / 60
+    return "%dh %dm" % (hours, minutes)
+
+def diff_prefix(diff):
+    return "positive" if diff >= 0 else "negative"
+
+kp_file = get_kp_file()
 print "Counting hours in %s" % kp_file
-hours = get_hours(kp_file)
+durations = get_durations(kp_file)
 
 sum = 0.0
 diff = 0.0
-for count in hours:
-    print "%.1f %s" % (count, ornament(count))
-    sum += count
-    diff += (count - 8)
+for d in durations:
+    print "%s %s" % (seconds2time(d.seconds), ornament(d))
+    sum += d.seconds
+    diff += (d.seconds - WORK_DAY_IN_SECS)
 print "----------------"
-print "TOTAL: %.1f" % sum
-print "diff: %.1f" % diff
-
+print "TOTAL: %s" % seconds2time(sum)
+print "%s diff: %s" % (diff_prefix(diff), seconds2time(diff))
