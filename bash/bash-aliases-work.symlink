@@ -5,5 +5,7 @@
 
 . ~/.bash-paths-work
 
-alias zim-work="zim $ZIM_NOTES_WORK_PATH"
+alias gokp="cd $KP_PATH"
 alias goworkrepo="cd $WORK_REPO_PATH"
+
+alias zim-work="zim $ZIM_NOTES_WORK_PATH"
