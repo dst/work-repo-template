@@ -2,4 +2,4 @@
 
 export PATH=~/bin/work-priv:$PATH
 
-
+. ~/.bash-aliases-work-priv
