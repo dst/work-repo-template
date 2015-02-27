@@ -1,10 +1,9 @@
 work-repo-template
 ========
 
-= About =
+# About
 Template repo for work setup. It includes ssh config, mail filters, etc.
 
-= Installation =
+# Installation
 Run script:
 $ ./install.sh
-
