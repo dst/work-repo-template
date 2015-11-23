@@ -7,4 +7,4 @@ It is a template for a work repository. It includes ssh config, mail filters, et
 # Installation
 Run script:
 
-$ ./install.sh
+  $ ./install.sh
