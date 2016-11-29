@@ -2,3 +2,6 @@
 #
 # Dariusz Stefanski
 # 23.09.2014
+
+DOTFILES_WORK_PRIV_PATH="$HOME/work-repo"
+DOTFILES_WORK_PRIV_TEMPLATE_PATH="$HOME/myprojects/work-repo-template"
